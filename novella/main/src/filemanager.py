@@ -23,8 +23,6 @@ class File_Manager:
 
     def list_images(self):
         imgs = os.listdir(self.image_dir)
-        for img in imgs:
-            img = os.path.join(self.image_dir, bin)
         return imgs
 
 

@@ -79,9 +79,31 @@
         </form>
     </div>
 </div>
-<div class="row p-3">
-    <div class="col-sm border p-2 rounded">
-        <h2> here I am </h2>
+<div class="row p-3" data-bind="visible: selectedLamp">
+    <div class="container border p-2 rounded ">
+        <div class="w-50 mx-auto">
+            <select id="selCommand" class="form-control" data-bind="options: allCommands, optionsCaption: 'Select command', value:selectedCommand"></select>
+        </div>
+        <div class="container my-2" id="commandArgs">
+            <div class="form-row">
+                <div class="col">
+                    <select id="arg1" class="form-control" data-bind="options: arg1Options, optionsCaption: arg1Cap, value:arg1Val, enable: arg1State"></select>
+                </div>
+                <div class="col">
+                    <select id="arg2" class="form-control" data-bind="options: arg2Options, optionsCaption: arg2Cap, value:arg2Val, enable: arg2State"></select>
+                </div>
+            </div>
+            <button type="button" class="btn btn-secondary mt-3" data-bind="click: submit">Submit</button>
+            <form action="/main/upload" method="post" enctype="multipart/form-data">
+                <div class="Form-group mt-4">
+                    <label for="fileup" class="my-0 text-left"> <small>Upload file to server</small></label>
+                    <input id="fileup" type="file" name="myfile" accept="image/*" class="form-control-file">
+                    <input id="uploadbutton" type="submit" class="btn btn-success mt-2" value="Submit" />
+                </div>
+            </form>
+
+
+        </div>
     </div>
 
 </div>

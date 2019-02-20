@@ -7,6 +7,10 @@ from main.src.filemanager import my_filemanager
 from main.src.response import my_responses
 from main.src.hardwareFunctions import send_command, send_image
 from django.views.decorators.csrf import csrf_exempt
+from django.conf import settings
+import os
+from .forms import UploadFileForm
+
 
 # Create your views here.
 @csrf_exempt
@@ -43,6 +47,9 @@ def command(request):
     elif command == "get_lamp_details":
         return getLampDetails(request)
 
+    elif command == "get_images":
+        return getImages(request)
+
     else:
         return JsonResponse(response)
 
@@ -52,19 +59,20 @@ def sendCommand(request):
     type = request.POST["device_type"]
     lcommand = request.POST["lamp_command"]
     response = dict()
-    response.status = ""
+    response["status"] = ""
 
     try:
         lamp = Lamp.objects.get(name=lampname)
         if type == "lampbody":
-            send_command(lamp.lampshade.lampbody.uid, lcommand)
+            ans = send_command(lamp.lampshade.lampbody.uid, lcommand)
 
         if type == "lampshade":
-            send_command(lamp.lampshade.uid, lcommand)
+            ans = send_command(lamp.lampshade.uid, lcommand)
     except Exception as e:
-        response.status = "Error"
+        response["status"] = "Error"
     else:
-        response.status = "OK"
+        response["status"] = "OK"
+        response["data"] = ans
 
     return JsonResponse(response)
 
@@ -164,4 +172,31 @@ def getLampDetails(request):
     response["lampshade"] = lamp.lampshade.uid
 
     print(response)
+    return JsonResponse(response)
+
+
+@csrf_exempt
+def upload(request):
+    response = dict()
+
+    if request.method == 'POST':
+        for key, file in request.FILES.items():
+            path = os.path.join( my_filemanager.image_dir, file.name)
+            handle_uploaded_file(path, file)
+            response["status"] = "OK"
+    
+    return render(request, 'main/main.html')
+
+
+def handle_uploaded_file(p, f):
+    with open(p, 'wb+') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
+
+
+def getImages(request):
+    response = dict()
+    ans = my_filemanager.list_images()
+    response["data"] = ans
+
     return JsonResponse(response)
