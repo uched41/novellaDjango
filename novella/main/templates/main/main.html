@@ -1,0 +1,88 @@
+{%extends "main/layout.html" %} {% block content %}
+<div class="row p-3">
+    <div class="col-sm p-2 border rounded mx-1">
+        <form>
+            <!-- Select lamp -->
+            <div class="form-group my-2 mx-4 px-4">
+                <select id="slsamp" class="form-control" style="width: 100%" data-bind="options: onlineLamps, optionsCaption: 'Select lamp', value: selectedLamp"></select>
+            </div>
+            <div class="strike"><span class="font-weight-light"> or </span></div>
+            <!-- Create Lamp-->
+            <div class="form-group my-2 mx-4 px-4">
+                <button type="button" class="btn btn-info form-control" id="createLamp" data-toggle="modal" data-target="#lampForm"
+                    data-bind="click: getDevices">Create
+                    new lamp</button>
+            </div>
+
+            <!-- Modal for creating lamp-->
+            <!-- Modal -->
+            <div class="modal fade" id="lampForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalCenterTitle">Select lamp componenents</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form class="px-4 py-2">
+                                <div class="form-row mb-2">
+                                    <div class="col text-center text-muted">
+                                        <label for="slbody">Lampbody</label>
+                                    </div>
+                                    <div class="col">
+                                        <select id="slbody" class="form-control" style="width: 100%" data-bind="options: onlineLampBodies, value:selectedLampBody"></select>
+                                    </div>
+                                </div>
+                                <div class="form-row mb-2">
+                                    <div class="col text-center text-muted">
+                                        <label for="slshade">Lampshade</label>
+                                    </div>
+                                    <div class="col">
+                                        <select id="slshade" class="form-control" style="width: 100%" data-bind="options: onlineLampShades, value: selectedLampShade"></select>
+                                    </div>
+                                </div>
+                                <div class="form-row mb-2">
+                                    <div class="col text-center text-muted">
+                                        <label for="slname">Lamp name</label>
+                                    </div>
+                                    <div class="col">
+                                        <input type="text" class="form-control" data-bind="value: lname">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+
+                            <button type="button" class="btn btn-info" data-bind="click: makeLamp">Make lamp</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <div class="col-sm p-2 border rounded mx-1">
+        <form>
+            <div class="form-group mx-4 px-4">
+                <label for="lbody" class="my-auto text-muted"><small>Lamp body</small></label>
+                <input type="text" class="form-control" id="lbody" aria-describedby="lampbody" data-bind="value: slampbody"
+                    disabled>
+            </div>
+            <div class="form-group mx-4 px-4">
+                <label for="lshade" class="my-auto text-muted"><small>Lamp shade</small></label>
+                <input type="text" class="form-control" id="lshade" aria-describedby="lampshade" data-bind="value: slampshade"
+                    disabled>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="row p-3">
+    <div class="col-sm border p-2 rounded">
+        <h2> here I am </h2>
+    </div>
+
+</div>
+{% endblock %}
