@@ -19,7 +19,7 @@ def send_command(uid, command):
     return ans
 
 
-def send_image(id, imgname):
+def send_image(uid, imgname):
         if imgname[0] == '/':
             imgname = imgname[1:]
             
@@ -27,9 +27,11 @@ def send_image(id, imgname):
         if bin_name == None:
             raise Exception ("file error")
 
+        print("starting sending procedure")
         BUF_SIZE = 512
         topic = "novella/devices/{}/{}/".format(uid, "image")
-
+        print(topic)
+        
         # to start we add 'start' to end of topic and send
         # device will read this topic end and act accordingly
         ntopic = topic + "start"
@@ -37,31 +39,32 @@ def send_image(id, imgname):
         no_lines = os.stat(fpath).st_size / BUF_SIZE
         no_lines = math.ceil(no_lines)
 
+
         bin_name = "/" + bin_name   # needed for SPIFFS filesystem
-        Lampshade.debug("Sending file: {}, to device: {}".format(bin_name, uid))
+        print("Sending file: {}, to device: {}".format(bin_name, uid))
         ndata = { "filename": bin_name, "no_lines": no_lines}
 
-        Lampshade.debug("Sending start message")
+        print("Sending start message")
         my_mqtt.publish(ntopic, str(ndata))
         if my_responses.wait_reply(uid) != "OK":     # wait for reply from device
-            Lampshade.debug("no reply from device")
+            print("no reply from device")
             raise Exception("device error")
 
         atopic = topic + "mid"
 
         with open(fpath, 'rb') as myfile:
             content = myfile.read()
-            Lampshade.debug("Sending file content")
+            print("Sending file content")
             for x in range(0, no_lines):
                 temp = content[ (x*BUF_SIZE) : (x*BUF_SIZE+BUF_SIZE)]
                 my_mqtt.publish(atopic, temp)
                 if my_responses.wait_reply(uid) != "OK":     # wait for reply from device
-                    Lampshade.debug("no reply from device")
+                    print("no reply from device")
                     raise Exception("device error")
             
         ltopic = topic + "end"
         my_mqtt.publish(ltopic, "End")
         if my_responses.wait_reply(uid) != "OK":     # wait for reply from device
-            Lampshade.debug("no reply from device")
+            print("no reply from device")
             raise Exception("device error")
-        Lampshade.debug("File send complete")
+        print("File send complete")
