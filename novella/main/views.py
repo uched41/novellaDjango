@@ -20,6 +20,7 @@ def index(request):
 
 @csrf_exempt
 def command(request):
+    print(request.POST)
     command = request.POST['command']
 
     response = dict()
@@ -132,7 +133,7 @@ def makeLamp(request):
             response["msg"] = "Error, Lampshade already belongs to another lamp"
             return JsonResponse(response)
 
-        if l.lampshade.lampbody.uid == body.id:
+        if l.lampshade.lampbody.uid == body_id:
             response["msg"] = "Error, Lampbody already belongs to another lamp"
             return JsonResponse(response)
 

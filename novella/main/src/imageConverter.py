@@ -9,7 +9,7 @@ class ImageConverter:
     def __init__(self):
         self.new_width = my_config.get("image", "new_width")
         self.new_height = my_config.get("image", "new_height")
-        self.fixed_length = 60
+        self.fixed_length = 88
 
     def convert_image(self, imagename):
         ImageConverter.debug("Converting image {}".format(imagename))

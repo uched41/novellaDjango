@@ -114,16 +114,20 @@ function mainPageViewModel() {
         if (self.selectedLamp() === undefined){
             return;
         }
+		temp = {command: "Get_Files"};
         data = {
             command: "send_command",
             lamp_name: self.selectedLamp(),
             device_type: "lampshade",
-            lamp_command: "Get_Files"
+            lamp_command: JSON.stringify(temp)
         }
         $.post("/main/command", data).done(function(data){
             if(data.data){
                 self.arg1Options(data.data.split(','));
             }
+			else{
+				self.arg1Options([]);
+			}
         })
     }
 
@@ -185,7 +189,7 @@ function mainPageViewModel() {
 
     // function to submit command 
     self.submit = function(){
-        data = []
+        data = {}
         data.lamp_name = self.selectedLamp();
         cmd = self.selectedCommand();
 
@@ -234,7 +238,7 @@ function mainPageViewModel() {
         console.log(data);
 
         $.post("/main/command", data).done(function(data){
-            alert(data);
+            alert(data.status);
         })
     }
 
