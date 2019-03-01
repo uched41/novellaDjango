@@ -51,6 +51,9 @@ def command(request):
     elif command == "get_images":
         return getImages(request)
 
+    elif command == "delete_lamp":
+        return deleteLamp(request)
+
     else:
         return JsonResponse(response)
 
@@ -113,6 +116,16 @@ def getOnlineLamps(request):
     response = dict()
     ans = my_responses.get_online_lamps()
     response["data"] = ans 
+    return JsonResponse(response)
+
+
+def deleteLamp(request):
+    response = dict()
+    lampname = request.POST["lamp_name"]
+
+    mlamp = Lamp.objects.get(name=lampname)
+    mlamp.delete()
+    response["msg"] = "OK"
     return JsonResponse(response)
 
 

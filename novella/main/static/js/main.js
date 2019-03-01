@@ -12,25 +12,105 @@ function mainPageViewModel() {
 
     self.slampbody = ko.observable();
     self.slampshade = ko.observable();
+ 
+    self.motorOn = ko.observable();
+    self.brightnessMode = ko.observable();
 
+    self.motorControl = ko.computed(function(){
+        if(self.motorOn() == undefined) return;
+        data = {
+            command:"send_command",
+            lamp_name: self.selectedLamp(),
+            device_type: "lampbody",
+            lamp_command: self.motorOn()?"'command':'Motor_On'":"'command':'Motor_Off'",
+        }
+        $.post("/main/command", data).done(function(data){
+            alert(data.status);
+        })
+    })
+
+    self.brightControl = ko.computed(function(){
+        if(self.brightnessMode() == undefined) return;
+        data = {
+            command:"send_command",
+            lamp_name: self.selectedLamp(),
+            device_type: "lampshade",
+            lamp_command: self.brightnessMode()?"'command':'Brightness_Mode', 'value':'1'":"'command':'Brightness_Mode', 'value':'0'",
+        }
+        $.post("/main/command", data).done(function(data){
+            alert(data.status);
+        })
+    })
+
+    // describes how the input for command will be displayed
+    self.commandsData =  {
+        Motor_speed: {
+            label: "Motor speed",
+            input_type: "range",
+            input_class: "form-control", 
+            prepend: true,
+            min: 1,
+            max: 100,
+            select: false,
+        },
+        Warm_led_brightness: {
+            label: "Warm led brightness",
+            input_type: "range",
+            input_class: "form-control", 
+            prepend: true,
+            min: 1,
+            max: 100,
+            select: false,
+        },
+        Cold_led_brightness: {
+            label: "Cold led brightness",
+            input_type: "range",
+            input_class: "form-control", 
+            prepend: true,
+            min: 1,
+            max: 100,
+            select: false,
+        },
+        Delete_file: {
+            select: true,
+            label: "Select file to delete",
+        },
+        Start_display: {
+            select: true,
+            label: "Select file to start",
+            caption: "Select file",
+        },
+        Stop_display: {
+            select: true,
+            label: "Stop display",
+        },
+        Send_image: {
+            select: true,
+            label: "Select image to send to lamp",
+            caption: "Select file",
+        },
+    };
+    
+    // command options to select
+    self.allCommands = ko.observableArray(Object.keys(self.commandsData));
+
+    // Data of current command being displayed
+    self.ccData = ko.observable(0);
+
+    // selected command
     self.selectedCommand = ko.observable();
-    self.allCommands = ko.observableArray([
-        "Start display",
-        "Stop display",
-        "Send image",
-        "Set motor speed",
-        "Set cold led brightness",
-        "Set warm led brightness",
-    ])
 
     self.arg1Options = ko.observableArray();
-    self.arg1Val = ko.observable();
+    self.arg1Val = ko.observable(50);
+    self.arg1ValStr = ko.computed(function(){ return'' + self.arg1Val(); });
     self.arg1Cap = ko.observable();
-    self.arg1State = ko.observable(false);
+    self.arg1State = ko.observable(true);
+    self.arg1Checked = ko.observable(false);
+
     self.arg2Options = ko.observableArray();
-    self.arg2Val = ko.observable();
-    self.arg2Cap = ko.observable();
-    self.arg2State = ko.observable(false);
+    self.arg2Val = ko.observable(50);
+    self.arg2State = ko.observable(true);
+    
 
     self.getOnlineLampBodies = function(){
         data = {
@@ -103,9 +183,23 @@ function mainPageViewModel() {
             }
             console.log(data);
             $.post("/main/command", data).done(function(data){
-                alert(data.msg)
+                alert(data.msg);
+                $('#lampForm').modal('toggle');
             })
         }
+        
+    }
+
+    self.deleteLamp = function(){
+        data = {
+            command: "delete_lamp",
+            lamp_name: self.selectedLamp()
+        }
+        console.log(data);
+        $.post("/main/command", data).done(function(data){
+            window.location = "/main/main"
+        })
+        
         
     }
 
@@ -131,7 +225,6 @@ function mainPageViewModel() {
         })
     }
 
-
     // get images on server
     self.getImages = function (){
         data = {
@@ -139,50 +232,29 @@ function mainPageViewModel() {
         }
         $.post("/main/command", data).done(function(data){
             if(data.data){
-                self.arg1Options(data.data);
+                self.arg2Options(data.data);
             }
         })
     }
 
 
     self.processCommand = ko.computed(function(){
-        if (self.selectedCommand() === undefined){
+        var cmd = self.selectedCommand();
+        if (cmd === undefined){
             return;
         }
-
-        var cmd = self.selectedCommand();
-        if(cmd === "Start display"){
+        self.ccData( self.commandsData[cmd]);
+        
+        if(cmd === "Start_display"){
             self.getFiles();    // get files so user can select
-            self.arg1Cap("Select File");
-            self.arg1State(true);
+            self.arg2State(true);
         }
-        else if (cmd === "Stop display"){
-            self.arg1State(false);
-            self.arg1Cap("");
+        else if (cmd === "Stop_display"){
             self.arg2State(false);
         }
-        else if (cmd === "Set motor speed"){
-            self.arg1State(true);
-            self.arg1Options(["25%", "50%", "75%", "100%",]);
-            self.arg1Cap("Select motor speed");
-            self.arg2State(false);
-        }
-        else if (cmd === "Set cold led brightness"){
-            self.arg1State(true);
-            self.arg1Options(["25%", "50%", "75%", "100%"]);
-            self.arg1Cap("Select brightness");
-            self.arg2State(false);
-        }
-        else if (cmd === "Set warm led brightness"){
-            self.arg1State(true);
-            self.arg1Cap("Select brightness");
-            self.arg1Options(["25%", "50%", "75%", "100%"]);
-            self.arg2State(false);
-        }
-        else if (cmd === "Send image" ){
+        else if (cmd === "Send_image" || cmd === "Delete_file"){
             self.getImages();
-            self.arg1State(true);
-            self.arg1Cap("Select image");
+            self.arg2State(true);
         }
     })
 
@@ -193,50 +265,56 @@ function mainPageViewModel() {
         data.lamp_name = self.selectedLamp();
         cmd = self.selectedCommand();
 
-        if (cmd == "Start display"){
+        if (cmd == "Start_display"){
             data.command = "send_command";
             data.device_type = "lampshade";
             temp = {
                 command: "Start_Display",
-                file: self.arg1Val(),
+                file: self.arg2Val(),
             }
             data.lamp_command = JSON.stringify(temp);
         }
 
-        else if (cmd == "Stop display"){
+        else if (cmd == "Stop_display"){
             data.command = "send_command";
             data.device_type = "lampshade";
             temp = { command: "Stop_Display", }
             data.lamp_command = JSON.stringify(temp);
         }
 
-        else if (cmd == "Set motor speed"){
+        else if (cmd == "Motor_speed"){
             data.command = "send_command";
             data.device_type = "lampbody";
             temp = { command: "Set_Motor_Speed", value: self.arg1Val(), }
             data.lamp_command = JSON.stringify(temp);
         }
 
-        else if (cmd == "Set cold led brightness"){
+        else if (cmd == "Cold_led_brightness"){
             data.command = "send_command";
             data.device_type = "lampbody";
             temp = { command: "Set_ColdLed_Brightness", value: self.arg1Val(), }
             data.lamp_command = JSON.stringify(temp);
         }
 
-        else if (cmd == "Set warm led brightness"){
+        else if (cmd == "Warm_led_brightness"){
             data.command = "send_command";
             data.device_type = "lampbody";
             temp = { command: "Set_WarmLed_Brightness", value: self.arg1Val(), }
             data.lamp_command = JSON.stringify(temp);
         }
 
-        else if( cmd == "Send image"){
+        else if( cmd == "Send_image"){
             data.command = "send_image";
-            data.image_name = self.arg1Val();
+            data.image_name = self.arg2Val();
         }
-        console.log(data);
 
+        else if( cmd == "Delete_file"){
+            data.command = "delete_image";
+            data.image_name = self.arg2Val();
+        }
+
+        console.log(data);
+        return;
         $.post("/main/command", data).done(function(data){
             alert(data.status);
         })

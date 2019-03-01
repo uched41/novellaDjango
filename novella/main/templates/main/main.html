@@ -4,13 +4,14 @@
         <form>
             <!-- Select lamp -->
             <div class="form-group my-2 mx-4 px-4">
-                <select id="slsamp" class="form-control" style="width: 100%" data-bind="options: onlineLamps, optionsCaption: 'Select lamp', value: selectedLamp"></select>
+                <select id="slsamp" class="form-control" style="width: 100%"
+                    data-bind="options: onlineLamps, optionsCaption: 'Select lamp', value: selectedLamp"></select>
             </div>
             <div class="strike"><span class="font-weight-light"> or </span></div>
             <!-- Create Lamp-->
             <div class="form-group my-2 mx-4 px-4">
-                <button type="button" class="btn btn-info form-control" id="createLamp" data-toggle="modal" data-target="#lampForm"
-                    data-bind="click: getDevices">Create
+                <button type="button" class="btn btn-info form-control" id="createLamp" data-toggle="modal"
+                    data-target="#lampForm" data-bind="click: getDevices">Create
                     new lamp</button>
             </div>
 
@@ -33,7 +34,8 @@
                                         <label for="slbody">Lampbody</label>
                                     </div>
                                     <div class="col">
-                                        <select id="slbody" class="form-control" style="width: 100%" data-bind="options: onlineLampBodies, value:selectedLampBody"></select>
+                                        <select id="slbody" class="form-control" style="width: 100%"
+                                            data-bind="options: onlineLampBodies, value:selectedLampBody"></select>
                                     </div>
                                 </div>
                                 <div class="form-row mb-2">
@@ -41,7 +43,8 @@
                                         <label for="slshade">Lampshade</label>
                                     </div>
                                     <div class="col">
-                                        <select id="slshade" class="form-control" style="width: 100%" data-bind="options: onlineLampShades, value: selectedLampShade"></select>
+                                        <select id="slshade" class="form-control" style="width: 100%"
+                                            data-bind="options: onlineLampShades, value: selectedLampShade"></select>
                                     </div>
                                 </div>
                                 <div class="form-row mb-2">
@@ -68,37 +71,94 @@
         <form>
             <div class="form-group mx-4 px-4">
                 <label for="lbody" class="my-auto text-muted"><small>Lamp body</small></label>
-                <input type="text" class="form-control" id="lbody" aria-describedby="lampbody" data-bind="value: slampbody"
-                    disabled>
+                <input type="text" class="form-control" id="lbody" aria-describedby="lampbody"
+                    data-bind="value: slampbody" disabled>
             </div>
             <div class="form-group mx-4 px-4">
                 <label for="lshade" class="my-auto text-muted"><small>Lamp shade</small></label>
-                <input type="text" class="form-control" id="lshade" aria-describedby="lampshade" data-bind="value: slampshade"
-                    disabled>
+                <input type="text" class="form-control" id="lshade" aria-describedby="lampshade"
+                    data-bind="value: slampshade" disabled>
+            </div>
+            <div class="mx-4 px-4">
+                <button class="btn btn-danger btn-sm" data-bind="enable: selectedLamp, click: deleteLamp"> Delete
+                    lamp</button>
             </div>
         </form>
     </div>
 </div>
 <div class="row p-3" data-bind="visible: selectedLamp">
     <div class="container border p-2 rounded ">
-        <div class="w-50 mx-auto">
-            <select id="selCommand" class="form-control" data-bind="options: allCommands, optionsCaption: 'Select command', value:selectedCommand"></select>
+        <div class="mx-auto text-center">
+            <h5 class="display-4" style="font-size: 1.4em">Commands</h5>
+
         </div>
         <div class="container my-2" id="commandArgs">
-            <div class="form-row">
-                <div class="col">
-                    <select id="arg1" class="form-control" data-bind="options: arg1Options, optionsCaption: arg1Cap, value:arg1Val, enable: arg1State"></select>
-                </div>
-                <div class="col">
-                    <select id="arg2" class="form-control" data-bind="options: arg2Options, optionsCaption: arg2Cap, value:arg2Val, enable: arg2State"></select>
+            <!-- row 1-->
+            <div class="mx-auto mb-2  d-flex justify-content-around">
+                <form class="form-inline">
+                    <select id="selCommand" class="form-control mx-3"
+                        data-bind="options: allCommands, optionsCaption: 'Select command', value:selectedCommand">
+                    </select>
+                    <div class="custom-control custom-switch custom-control-inline text-muted" style="font-size: 0.9em">
+                        <input type="checkbox" class="custom-control-input" id="customSwitch1"
+                            data-bind="checked:motorOn">
+                        <label class="custom-control-label" for="customSwitch1">Motor on/off</label>
+                    </div>
+                    <div class="custom-control custom-switch custom-control-inline text-muted" style="font-size: 0.9em">
+                        <input type="checkbox" class="custom-control-input" id="customSwitch2"
+                            data-bind="checked:brightnessMode">
+                        <label class="custom-control-label" for="customSwitch2">Automatic brightness control</label>
+                    </div>
+                </form>
+            </div>
+
+            <div class="container mt-2 " data-bind="visible: ccData">
+                <div class="form-group p-2 pb-3 mb-2 border rounded">
+                    <!-- label -->
+                    <div class="d-block border-bottom">
+                        <label class="commandLabel mb-0 " style="color: red" for="formControlRange"
+                            data-bind="text: ccData().label">Set motor
+                            speed</label>
+                    </div>
+                    <!-- input -->
+                    <div class="input-group my-1 mt-3 p-3 w-50 mx-auto" id="formControlRange"
+                        data-bind="visible: !ccData().select">
+                        <input data-bind=" 
+                             value: arg1Val, 
+                             valueUpdate: 'input',
+                             enable: arg1State, 
+                             attr: { 
+                                 type: ccData().input_type, 
+                                 min: ccData().min, 
+                                 max: ccData().max, 
+                                 class: ccData().input_class,  
+                                },
+                                ">
+                        <div class="input-group-append" data-bind="visible: ccData().prepend">
+                            <span class="input-group-text" data-bind="text:arg1ValStr">.00</span>
+                        </div>
+                    </div>
+
+                    <!-- select -->
+                    <div class="mx-auto my-2 mt-3 w-50" data-bind="visible: ccData().select">
+                        <select id="arg1r" class="form-control mb-1" data-bind="
+                                options: arg2Options, 
+                                optionsCaption: ccData().caption, 
+                                value:arg2Val, 
+                                enable: arg2State">
+                        </select>
+                    </div>
+
+                    <button type="button" class="btn btn-success mt-3" data-bind="click: submit">Submit</button>
                 </div>
             </div>
-            <button type="button" class="btn btn-secondary mt-3" data-bind="click: submit">Submit</button>
+
             <form action="/main/upload" method="post" enctype="multipart/form-data">
-                <div class="Form-group mt-4">
+                <div class=" mt-4">
                     <label for="fileup" class="my-0 text-left"> <small>Upload file to server</small></label>
-                    <input id="fileup" type="file" name="myfile" accept="image/*" class="form-control-file">
-                    <input id="uploadbutton" type="submit" class="btn btn-success mt-2" value="Submit" />
+                    <input id="fileup" type="file" name="myfile" accept="image/*" class="d-block">
+                    <input id="uploadbutton" type="submit" class="btn btn-secondary btn-sm mt-2" value="Submit"
+                        name="upload file" />
                 </div>
             </form>
 

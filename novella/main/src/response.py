@@ -41,13 +41,13 @@ class Response:
         return False
 
 
-    def set_online(self, device, type):
+    def set_online(self, device, mtype):
         if device not in self.data.keys():
             d = dict()
             d["new"] = False 
             self.data[device] = d
         self.data[device]["last_updated"] = time.time()
-        self.data[device]["type"] = type
+        self.data[device]["type"] = mtype
 
 
     def set_offline(self, device):
@@ -84,7 +84,7 @@ class Response:
         return tans
 
 
-    def wait_reply(self, device, timeout=5):
+    def wait_reply(self, device, timeout=10):
         oldTime = time.time()
         print("Waiting for reply from: {}".format(device))
         while (time.time()-oldTime < (timeout) ):

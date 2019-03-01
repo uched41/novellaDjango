@@ -93,9 +93,9 @@ class Mqtt:
         # check if this is a ping message and act accordingly
         if "ping" in topic_parts:
             uid = data.get("id")
-            type = data.get("type")
-            Mqtt.debug("ping from {} {}".format(type, uid))
-            my_responses.set_online(uid, type)
+            mtype = data.get("type")
+            Mqtt.debug("ping from {} {}".format(mtype, uid))
+            my_responses.set_online(uid, mtype)
 
 
         elif "response" in topic_parts:

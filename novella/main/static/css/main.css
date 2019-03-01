@@ -1,4 +1,9 @@
 
+:root{
+  --font1:  'Roboto', sans-serif;
+}
+
+
 .strike {
     display: block;
     text-align: center;
@@ -30,3 +35,9 @@
     left: 100%;
     margin-left: 15px;
   }
+  
+  .commandLabel{
+    font-size: 0.9em;
+  }
+
+  
