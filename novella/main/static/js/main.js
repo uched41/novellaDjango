@@ -217,10 +217,10 @@ function mainPageViewModel() {
         }
         $.post("/main/command", data).done(function(data){
             if(data.data){
-                self.arg1Options(data.data.split(','));
+                self.arg2Options(data.data.split(','));
             }
 			else{
-				self.arg1Options([]);
+				self.arg2Options([]);
 			}
         })
     }
@@ -313,8 +313,6 @@ function mainPageViewModel() {
             data.image_name = self.arg2Val();
         }
 
-        console.log(data);
-        return;
         $.post("/main/command", data).done(function(data){
             alert(data.status);
         })
