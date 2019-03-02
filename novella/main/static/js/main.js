@@ -216,6 +216,7 @@ function mainPageViewModel() {
             lamp_command: JSON.stringify(temp)
         }
         $.post("/main/command", data).done(function(data){
+			console.log(data)
             if(data.data){
                 self.arg2Options(data.data.split(','));
             }
