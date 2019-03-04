@@ -67,4 +67,5 @@ def send_image(uid, imgname):
         if my_responses.wait_reply(uid) != "OK":     # wait for reply from device
             print("no reply from device")
             raise Exception("device error")
+        my_responses.set_false(uid)
         print("File send complete")

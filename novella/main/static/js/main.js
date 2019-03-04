@@ -73,7 +73,7 @@ function mainPageViewModel() {
         },
         Delete_file: {
             select: true,
-            label: "Select file to delete",
+            label: "Select file to delete from server",
         },
         Start_display: {
             select: true,
@@ -84,10 +84,33 @@ function mainPageViewModel() {
             select: true,
             label: "Stop display",
         },
+        Delete_bin_File: {
+            select: true,
+            label: "Select file to delete from master",
+            caption: "Select file",
+        },
         Send_image: {
             select: true,
             label: "Select image to send to lamp",
             caption: "Select file",
+        },
+        Image_brightness: {
+            label: "Image brightness",
+            input_type: "range",
+            input_class: "form-control", 
+            prepend: true,
+            min: 1,
+            max: 100,
+            select: false,
+        },
+        Column_delay: {
+            label: "Delay between columns, in microseconds",
+            input_type: "range",
+            input_class: "form-control", 
+            prepend: true,
+            min: 1,
+            max: 10000,
+            select: false,
         },
     };
     
@@ -216,11 +239,12 @@ function mainPageViewModel() {
             lamp_command: JSON.stringify(temp)
         }
         $.post("/main/command", data).done(function(data){
+			console.log(data)
             if(data.data){
-                self.arg1Options(data.data.split(','));
+                self.arg2Options(data.data.split(','));
             }
 			else{
-				self.arg1Options([]);
+				self.arg2Options([]);
 			}
         })
     }
@@ -245,7 +269,7 @@ function mainPageViewModel() {
         }
         self.ccData( self.commandsData[cmd]);
         
-        if(cmd === "Start_display"){
+        if(cmd === "Start_display" || cmd === "Delete_bin_File"){
             self.getFiles();    // get files so user can select
             self.arg2State(true);
         }
@@ -275,6 +299,13 @@ function mainPageViewModel() {
             data.lamp_command = JSON.stringify(temp);
         }
 
+        else if (cmd == "Delete_bin_File"){
+            data.command = "send_command";
+            data.device_type = "lampshade";
+            temp = { command: "Delete_Bin", file: self.arg2Val(), }
+            data.lamp_command = JSON.stringify(temp);
+        }
+
         else if (cmd == "Stop_display"){
             data.command = "send_command";
             data.device_type = "lampshade";
@@ -300,6 +331,20 @@ function mainPageViewModel() {
             data.command = "send_command";
             data.device_type = "lampbody";
             temp = { command: "Set_WarmLed_Brightness", value: self.arg1Val(), }
+            data.lamp_command = JSON.stringify(temp);
+        }
+
+        else if (cmd == "Image_brightness"){
+            data.command = "send_command";
+            data.device_type = "lampshade";
+            temp = { command: "Brightness", value: self.arg1Val(), }
+            data.lamp_command = JSON.stringify(temp);
+        }
+
+        else if (cmd == "Column_delay"){
+            data.command = "send_command";
+            data.device_type = "lampshade";
+            temp = { command: "Column_Delay", value: self.arg1Val(), }
             data.lamp_command = JSON.stringify(temp);
         }
 

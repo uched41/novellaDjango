@@ -97,5 +97,9 @@ class Response:
         return None
 
 
+    def set_false(self, device):
+        self.data[device]["new"] = False
+
+
 # response instance
 my_responses = Response()
