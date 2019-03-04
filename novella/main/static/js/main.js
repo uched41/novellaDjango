@@ -358,8 +358,6 @@ function mainPageViewModel() {
             data.image_name = self.arg2Val();
         }
 
-        console.log(data);
-        return;
         $.post("/main/command", data).done(function(data){
             alert(data.status);
         })
