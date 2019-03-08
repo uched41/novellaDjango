@@ -1,3 +1,7 @@
 novella/novella/settings.py
-./.novella
+./.novella/*
 *.pyc
+*.png
+*.bin
+*.jpg
+*.jpeg
