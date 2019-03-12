@@ -95,7 +95,10 @@ class Mqtt:
             uid = data.get("id")
             mtype = data.get("type")
             Mqtt.debug("ping from {} {}".format(mtype, uid))
-            my_responses.set_online(uid, mtype)
+            ret = my_responses.set_online(uid, mtype)
+            if ret:
+                print(str(ret))
+                client.publish(ret["topic"], String(ret["data"]))
 
 
         elif "response" in topic_parts:

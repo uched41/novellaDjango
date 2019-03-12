@@ -10,7 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 import os
 from .forms import UploadFileForm
-
+import ast
 
 # Create your views here.
 @csrf_exempt
@@ -77,6 +77,30 @@ def sendCommand(request):
     else:
         response["status"] = "OK"
         response["data"] = ans
+
+        # find out what we send to slave and update db accordingly
+        print("Saving setting to database.")
+        ldata = ast.literal_eval(lcommand)
+        if ldata.get("command") == "Start_Display":
+            lamp.currentImage = ldata.get("file")
+        
+        elif ldata.get("command") == "Set_Motor_Speed":
+            lamp.motorSpeed = ldata.get("value")
+
+        elif ldata.get("command") == "Set_ColdLed_Brightness":
+            lamp.coldLedBrightness = ldata.get("value")
+
+        elif ldata.get("command") == "Set_WarmLed_Brightness":
+            lamp.warmLedBrightness = ldata.get("value")
+        
+        elif ldata.get("command") == "Brightness":
+            lamp.brightness = ldata.get("value")
+
+        elif ldata.get("command") == "Brightness_Mode":
+            lamp.brightnessMode = ldata.get("value")
+
+        elif ldata.get("command") == "Column_Delay":
+            lamp.delayBetweenColumns = ldata.get("value")
 
     return JsonResponse(response)
 

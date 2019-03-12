@@ -1,5 +1,6 @@
 import time
 from main.models import Lampshade, Lampbody, Lamp
+from main.src.config import my_config
 
 # This class object will store the response from each device
 
@@ -42,12 +43,50 @@ class Response:
 
 
     def set_online(self, device, mtype):
+        ret = None
         if device not in self.data.keys():
             d = dict()
             d["new"] = False 
             self.data[device] = d
+            lbody, lshade = None, None
+
+            if mtype == "lampbody" and Lampbody.objects.filter(uid = device).exists():
+                lbody = Lampbody.objects.get(uid = device)
+                lshade = lbody.lampshade
+                if lshade:
+                    print("Lampbody {} coming online".format(device))
+                    lamp = Lamp.objects.get(lampshade=lshade)
+                    data = lamp.settings("lampbody")
+
+                    topic = my_config.get("mqtt", "device_topic_base")
+                    topic = "{}/{}".format(topic, device)
+                    ret = {
+                        "data" : data,
+                        "topic" : topic  
+                    }
+
+            elif mtype == "lampshade" and Lampshade.objects.filter(uid = device).exists():
+                lshade = Lampshade.objects.get(uid = device)
+                lbody = lshade.lampbody 
+                if lbody:
+                    print("Lampshade {} coming online".format(device))
+                    lamp = Lamp.objects.get(lampshade=lshade)
+                    data = lamp.settings("lampshade")
+
+                    topic = my_config.get("mqtt", "device_topic_base")
+                    topic = "{}/{}".format(topic, device)
+                    ret = {
+                        "data" : data,
+                        "topic" : topic  
+                    }
+
+            else:
+                print("New lamp part {}".format(device))
+
+
         self.data[device]["last_updated"] = time.time()
         self.data[device]["type"] = mtype
+        return ret
 
 
     def set_offline(self, device):
