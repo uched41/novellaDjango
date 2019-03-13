@@ -2,6 +2,19 @@ import time
 from main.models import Lampshade, Lampbody, Lamp
 from main.src.config import my_config
 
+
+# This object will run commands sent from device to server
+class DeviceCommand:
+    def deleteLamp(self, uid):
+        if Lampshade.objects.filter(uid=uid).exists():
+            lshade = Lampshade.objects.get(uid=uid)
+            lamp = Lamp.objects.get(lampshade=lshade)
+            print("Deleting Lamp {}".format(lshade.name))
+            lamp.delete()
+
+
+device_shell = DeviceCommand()
+
 # This class object will store the response from each device
 
 class Response:

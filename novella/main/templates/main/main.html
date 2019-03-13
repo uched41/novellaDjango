@@ -125,6 +125,7 @@
                         data-bind="visible: !ccData().select">
                         <input data-bind=" 
                              value: arg1Val, 
+                             event:{change: submit},
                              valueUpdate: 'input',
                              enable: arg1State, 
                              attr: { 

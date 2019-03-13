@@ -1,7 +1,7 @@
 import paho.mqtt.client as mqtt
 import time
 import threading
-from main.src.response import my_responses
+from main.src.response import my_responses, device_shell
 from main.src.logger import logger
 import ast
 
@@ -109,6 +109,15 @@ class Mqtt:
                 my_responses.set("lampbody", uid, res)
             if "lampshade" in topic_parts:
                 my_responses.set("lampshade", uid, res)
+
+
+        elif "command" in topic_parts:
+            cmd = data.get("command")
+            uid = data.get("id")
+
+            if(cmd == "Reset"):
+                device_shell.deleteLamp(uid)
+                
 
     @staticmethod
     def debug(*args):
