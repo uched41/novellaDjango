@@ -1,13 +1,13 @@
 # Configuration for /etc/init.d/novella
 
 # The init.d script will only run if this variable non-empty.
-NOVELLA_USER=novellaMaker
+NOVELLA_USER=novellamaker
 
 # On what port to run daemon, default is 5000
 PORT=8000
 
 # Path to the novella executable, you need to set this to match your installation!
-#DAEMON=/home/novellaMaker/novellaDjango/start.sh
+DAEMON=/home/novellamaker/novellaDjango/start.sh
 
 # What arguments to pass to novella, usually no need to touch this
 DAEMON_ARGS="--port=$PORT"
