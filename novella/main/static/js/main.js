@@ -24,7 +24,7 @@ function mainPageViewModel() {
             device_type: "lampbody",
             lamp_command: self.motorOn()?"'command':'Motor_On'":"'command':'Motor_Off'",
         }
-        $.post("/main/command", data).done(function(data){
+        $.post("/command", data).done(function(data){
             alert(data.status);
         })
     })
@@ -37,7 +37,7 @@ function mainPageViewModel() {
             device_type: "lampshade",
             lamp_command: self.brightnessMode()?"'command':'Brightness_Mode', 'value':'1'":"'command':'Brightness_Mode', 'value':'0'",
         }
-        $.post("/main/command", data).done(function(data){
+        $.post("/command", data).done(function(data){
             alert(data.status);
         })
     })
@@ -139,7 +139,7 @@ function mainPageViewModel() {
         data = {
             command: "get_online_lampbodies"
         }
-        $.post("/main/command", data).done(function(data){
+        $.post("/command", data).done(function(data){
             if(data.data.length > 0){
                 console.log(data);
                 self.onlineLampBodies(data.data);
@@ -151,7 +151,7 @@ function mainPageViewModel() {
         data = {
             command: "get_online_lampshades"
         }
-        $.post("/main/command", data).done(function(data){
+        $.post("/command", data).done(function(data){
             if(data.data.length > 0){
                 console.log(data);
                 self.onlineLampShades(data.data);
@@ -169,7 +169,7 @@ function mainPageViewModel() {
         data = {
             command: "get_online_lamps"
         }
-        $.post("/main/command", data).done(function(data){
+        $.post("/command", data).done(function(data){
             if(data.data.length > 0){
                 self.onlineLamps(data.data);
             }
@@ -186,7 +186,7 @@ function mainPageViewModel() {
             command: "get_lamp_details",
             lamp_name: self.selectedLamp() || " "
         }
-        $.post("/main/command", data).done(function(data){
+        $.post("/command", data).done(function(data){
             if(data.lampbody && data.lampshade){
                 self.slampbody(data.lampbody);
                 self.slampshade(data.lampshade);
@@ -205,7 +205,7 @@ function mainPageViewModel() {
                 lamp_name: self.lname()
             }
             console.log(data);
-            $.post("/main/command", data).done(function(data){
+            $.post("/command", data).done(function(data){
                 alert(data.msg);
                 $('#lampForm').modal('toggle');
             })
@@ -219,8 +219,8 @@ function mainPageViewModel() {
             lamp_name: self.selectedLamp()
         }
         console.log(data);
-        $.post("/main/command", data).done(function(data){
-            window.location = "/main/main"
+        $.post("/command", data).done(function(data){
+            window.location = "/main"
         })
         
         
@@ -238,7 +238,7 @@ function mainPageViewModel() {
             device_type: "lampshade",
             lamp_command: JSON.stringify(temp)
         }
-        $.post("/main/command", data).done(function(data){
+        $.post("/command", data).done(function(data){
 			console.log(data)
             if(data.data){
                 self.arg2Options(data.data.split(','));
@@ -254,7 +254,7 @@ function mainPageViewModel() {
         data = {
             command: "get_images",
         }
-        $.post("/main/command", data).done(function(data){
+        $.post("/command", data).done(function(data){
             if(data.data){
                 self.arg2Options(data.data);
             }
@@ -359,9 +359,9 @@ function mainPageViewModel() {
         }
 
         console.log(data);
-        return;
-        $.post("/main/command", data).done(function(data){
-            alert(data.status);
+
+        $.post("/command", data).done(function(data){
+            //alert(data.status);
         })
     }
 

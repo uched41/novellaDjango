@@ -102,6 +102,8 @@ def sendCommand(request):
         elif ldata.get("command") == "Column_Delay":
             lamp.delayBetweenColumns = ldata.get("value")
 
+        lamp.save()
+
     return JsonResponse(response)
 
 

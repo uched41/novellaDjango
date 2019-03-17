@@ -20,7 +20,7 @@ device_shell = DeviceCommand()
 class Response:
     def __init__(self):
         self.data = dict()
-        self.online_timeout = 120   # seconds
+        self.online_timeout = 10    # seconds
     # self.data = {
     #           "D91980029":{
     #               "response":"OK",
@@ -92,6 +92,7 @@ class Response:
                         "data" : data,
                         "topic" : topic  
                     }
+
 
             else:
                 print("New lamp part {}".format(device))
