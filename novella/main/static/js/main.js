@@ -375,6 +375,7 @@ function mainPageViewModel() {
         }
 
         console.log(data);
+
         $.post("/command", data).done(function(data){
             //alert(data.status);
         })

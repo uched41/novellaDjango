@@ -51,8 +51,6 @@ device_shell = DeviceCommand()
 
 
 
-
-
 # This class object will store the response from each device
 
 class Response:
@@ -94,6 +92,7 @@ class Response:
 
 
     def set_online(self, device, mtype):
+        ret = None
         if device not in self.data.keys():
             d = dict()
             d["new"] = False 
@@ -101,6 +100,7 @@ class Response:
 
         self.data[device]["last_updated"] = time.time()
         self.data[device]["type"] = mtype
+        return ret
 
 
     def set_offline(self, device):
