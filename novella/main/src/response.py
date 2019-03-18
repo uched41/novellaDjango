@@ -1,12 +1,64 @@
 import time
 from main.models import Lampshade, Lampbody, Lamp
+from main.src.config import my_config
+
+
+# This object will run commands sent from device to server
+class DeviceCommand:
+    def delete_lamp(self, uid):
+        if Lampshade.objects.filter(uid=uid).exists():
+            lshade = Lampshade.objects.get(uid=uid)
+            lamp = Lamp.objects.get(lampshade=lshade)
+            print("Deleting Lamp {}".format(lshade.name))
+            lamp.delete()
+
+    def get_settings(self, device, mtype):
+        ret = None
+        if mtype == "lampbody" and Lampbody.objects.filter(uid = device).exists():
+            lbody = Lampbody.objects.get(uid = device)
+            lshade = lbody.lampshade
+            if lshade:
+                print("Lampbody {} coming online".format(device))
+                lamp = Lamp.objects.get(lampshade=lshade)
+                data = lamp.settings("lampbody")
+
+                topic = my_config.get("mqtt", "device_topic_base")
+                topic = "{}/{}".format(topic, device)
+                ret = {
+                    "data" : data,
+                    "topic" : topic  
+                }
+
+        elif mtype == "lampshade" and Lampshade.objects.filter(uid = device).exists():
+            lshade = Lampshade.objects.get(uid = device)
+            lbody = lshade.lampbody 
+            if lbody:
+                print("Lampshade {} coming online".format(device))
+                lamp = Lamp.objects.get(lampshade=lshade)
+                data = lamp.settings("lampshade")
+
+                topic = my_config.get("mqtt", "device_topic_base")
+                topic = "{}/{}".format(topic, device)
+                ret = {
+                    "data" : data,
+                    "topic" : topic  
+                }
+
+
+        return ret 
+
+device_shell = DeviceCommand()
+
+
+
+
 
 # This class object will store the response from each device
 
 class Response:
     def __init__(self):
         self.data = dict()
-        self.online_timeout = 120   # seconds
+        self.online_timeout = 10    # seconds
     # self.data = {
     #           "D91980029":{
     #               "response":"OK",
@@ -46,6 +98,7 @@ class Response:
             d = dict()
             d["new"] = False 
             self.data[device] = d
+
         self.data[device]["last_updated"] = time.time()
         self.data[device]["type"] = mtype
 

@@ -91,7 +91,7 @@ class Lampshade(models.Model):
         Lampbody,
         blank=True,
         null=True,
-        on_delete=models.SET_NULL
+        on_delete=models.CASCADE
         )
     settings = models.TextField(blank=True)  
 
@@ -99,13 +99,45 @@ class Lampshade(models.Model):
         return self.id
 
 
+
 class Lamp(models.Model):
     lampshade = models.OneToOneField(
         Lampshade,
         null=True,
-        on_delete=models.SET_NULL
+        on_delete=models.CASCADE
         )
+
+    brightness = models.PositiveSmallIntegerField(default=50, blank=True)
+    brightnessMode = models.PositiveSmallIntegerField(default=0, blank=True)
+    delayBetweenColumns = models.PositiveSmallIntegerField(default=100, blank=True)
+    divider = models.PositiveSmallIntegerField(default=16, blank=True)
+    currentImage = models.CharField(max_length=40, blank=True)
+
+    motorSpeed = models.PositiveSmallIntegerField(default=50, blank=True)
+    coldLedBrightness = models.PositiveSmallIntegerField(default=50, blank=True)
+    warmLedBrightness = models.PositiveSmallIntegerField(default=50, blank=True)
+
     name = models.CharField(max_length=40)
 
     def __str__(self):
         return self.name
+
+    def settings(self, mtype):
+        if mtype == "lampbody":
+            data = {
+            "command" : "Saved_Data",
+            "ColdLed_Brightness" : self.coldLedBrightness,
+            "WarmLed_Brightness" : self.warmLedBrightness,
+            "Motor_Speed" : self.motorSpeed,
+            }
+
+        elif mtype == "lampshade":
+            data = {
+            "command" : "Saved_Data",
+            "Brightness" : self.brightness,
+            "Brightness_Mode" : self.brightnessMode,
+            "Delay_Columns" : self.delayBetweenColumns,
+            "Divider": self.divider,
+            "Image" : self.currentImage,
+            }
+        return data

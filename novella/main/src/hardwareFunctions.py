@@ -7,7 +7,7 @@ from main.src.filemanager import my_filemanager
 from ast import literal_eval
 import os, math
 
-
+ 
 def send_command(uid, command):
     topic = my_config.get("mqtt", "device_topic_base")
     topic = "{}/{}".format(topic, uid)
