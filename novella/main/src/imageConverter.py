@@ -41,7 +41,7 @@ class ImageConverter:
             os.remove(outputFile)
 
         with open(outputFile, 'wb') as myf:
-            myf.write( newWidth.to_bytes(2, byteorder='big') )  # Write no of columns to file
+            myf.write( bytearray( newWidth.to_bytes(2, byteorder='big') ) )  # Write no of columns to file
             for pixel in data:          # iterate through all the pixels
                 for col in pixel:       # iterate through all the colors 
                     tem = int(col)

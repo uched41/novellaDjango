@@ -271,31 +271,34 @@ function mainPageViewModel() {
     }
 
 
-	self.refresh = function(){
-		console.log("refreshing options");
-		var cmd = self.selectedCommand();
-
-		if(cmd === undefined) { return ;}
-
-		if(cmd === "Start_display" || cmd === "Delete_bin_file"){
-			self.getFiles();
-			self.arg2State(true);
-		}
-		else if (cmd === "Send_image" || cmd === "Delete_file"){
-			self.getImages();
-			self.arg2State(true);
-		}
-
-	}
-
-    self.processCommand = ko.computed(function(){
+	self.refreshOptions = ko.computeself.processCommand = ko.computed(function(data, event=undefined){
+        console.log("Refreshing options");
         var cmd = self.selectedCommand();
         if (cmd === undefined){
             return;
         }
-		
         self.ccData( self.commandsData[cmd]);
-        
+
+        if(cmd === "Start_display" || cmd === "Delete_bin_File"){
+            self.getFiles();    // get files so user can select
+            self.arg2State(true);
+        }
+        else if (cmd === "Stop_display"){
+            self.arg2State(false);
+        }
+        else if (cmd === "Send_image" || cmd === "Delete_file"){
+            self.getImages();
+            self.arg2State(true);
+        }
+    })
+
+    self.processCommand = ko.computed(function(data, event=undefined){
+		console.log("Refreshing options");
+        var cmd = self.selectedCommand();
+        if (cmd === undefined){
+            return;
+        }
+        self.ccData( self.commandsData[cmd]);
 
         if(cmd === "Start_display" || cmd === "Delete_bin_File"){
             self.getFiles();    // get files so user can select

@@ -54,6 +54,9 @@ def command(request):
     elif command == "delete_lamp":
         return deleteLamp(request)
 
+    elif command == "delete_image":
+        return deleteImg(request)
+
     else:
         return JsonResponse(response)
 
@@ -79,33 +82,33 @@ def sendCommand(request):
         response["data"] = ans
 
         # find out what we send to slave and update db accordingly
-        print("Saving setting to database.")
-        ldata = ast.literal_eval(lcommand)
-        if ldata.get("command") == "Start_Display":
-            lamp.currentImage = ldata.get("file")
+    print("Saving setting to database.")
+    ldata = ast.literal_eval(lcommand)
+    if ldata.get("command") == "Start_Display":
+        lamp.currentImage = ldata.get("file")
+    
+    elif ldata.get("command") == "Set_Motor_Speed":
+        lamp.motorSpeed = ldata.get("value")
+
+    elif ldata.get("command") == "Set_ColdLed_Brightness":
+        lamp.coldLedBrightness = ldata.get("value")
+
+    elif ldata.get("command") == "Set_WarmLed_Brightness":
+        lamp.warmLedBrightness = ldata.get("value")
         
-        elif ldata.get("command") == "Set_Motor_Speed":
-            lamp.motorSpeed = ldata.get("value")
+    elif ldata.get("command") == "Brightness":
+        lamp.brightness = ldata.get("value")
 
-        elif ldata.get("command") == "Set_ColdLed_Brightness":
-            lamp.coldLedBrightness = ldata.get("value")
+    elif ldata.get("command") == "Brightness_Mode":
+        lamp.brightnessMode = ldata.get("value")
 
-        elif ldata.get("command") == "Set_WarmLed_Brightness":
-            lamp.warmLedBrightness = ldata.get("value")
-        
-        elif ldata.get("command") == "Brightness":
-            lamp.brightness = ldata.get("value")
+    elif ldata.get("command") == "Column_Delay":
+        lamp.delayBetweenColumns = ldata.get("value")
 
-        elif ldata.get("command") == "Brightness_Mode":
-            lamp.brightnessMode = ldata.get("value")
+    elif ldata.get("command") == "Divider":
+        lamp.divider = ldata.get("value")
 
-        elif ldata.get("command") == "Column_Delay":
-            lamp.delayBetweenColumns = ldata.get("value")
-
-        elif ldata.get("command") == "Divider":
-            lamp.divider = ldata.get("value")
-
-        lamp.save()
+    lamp.save()
 
     return JsonResponse(response)
 
@@ -145,6 +148,15 @@ def getOnlineLamps(request):
     response = dict()
     ans = my_responses.get_online_lamps()
     response["data"] = ans 
+    return JsonResponse(response)
+
+
+def deleteImg(request):
+    response = dict()
+    response["msg"] = "ok"
+    img = request.POST["image_name"]
+    path = os.path.join( my_filemanager.image_dir, img)
+    os.remove(path)
     return JsonResponse(response)
 
 

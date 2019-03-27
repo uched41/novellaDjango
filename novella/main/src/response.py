@@ -23,7 +23,7 @@ class DeviceCommand:
                 data = lamp.settings("lampbody")
 
                 topic = my_config.get("mqtt", "device_topic_base")
-                topic = "{}/{}".format(topic, device)
+                topic = "{}/{}/settings".format(topic, device)
                 ret = {
                     "data" : data,
                     "topic" : topic  

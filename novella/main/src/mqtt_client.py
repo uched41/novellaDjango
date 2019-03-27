@@ -112,7 +112,7 @@ class Mqtt:
             cmd = data.get("command")
             uid = data.get("id")
             mtype = data.get("type")
-            
+            Mqtt.debug("MQTT command {}".format(uid))
             if(cmd == "Reset"):
                 device_shell.delete_lamp(uid)
 
