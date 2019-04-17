@@ -118,7 +118,7 @@ function mainPageViewModel() {
             input_class: "form-control", 
             prepend: true,
             min: 1,
-            max: 10000,
+            max: 500,
             select: false,
         },
     };
