@@ -28,6 +28,18 @@ class ImageConverter:
             ImageConverter.debug(e)
             return None
 
+        # get number of frames if gif
+        noframes = 0
+        try:
+            while 1:
+                self.im.seek(self.im.tell()+1)
+                noframes = noframes + 1
+        except EOFError:
+            pass
+        self.im.seek(0)
+        if noframes == 0:   # set no frames to 1 for normal images
+            noframes = 1
+
         newWidth = int(self.owidth * self.fixed_length / self.oheight)
         newSize = newWidth, self.fixed_length
 
@@ -41,7 +53,8 @@ class ImageConverter:
             os.remove(outputFile)
 
         with open(outputFile, 'wb') as myf:
-            myf.write( newWidth.to_bytes(2, byteorder='big') )  # Write no of columns to file
+            myf.write( bytearray( noframes.to_bytes(2, byteorder='big') ) )  # Write no of images to file
+            myf.write( bytearray( newWidth.to_bytes(2, byteorder='big') ) )  # Write no of columns to file
             for pixel in data:          # iterate through all the pixels
                 for col in pixel:       # iterate through all the colors 
                     tem = int(col)

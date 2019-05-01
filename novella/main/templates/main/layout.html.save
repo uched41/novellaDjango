@@ -50,6 +50,6 @@
     <div class="container bg-white mt-4 border rounded" id="mainCont">
         {% block content %} {% endblock %}
     </div>
-</body>
+</body>				
 
 </html>

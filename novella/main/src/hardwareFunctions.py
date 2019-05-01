@@ -45,6 +45,7 @@ def send_image(uid, imgname):
         ndata = { "filename": bin_name, "no_lines": no_lines}
 
         print("Sending start message")
+        my_responses.set_false(uid)
         my_mqtt.publish(ntopic, str(ndata))
         if my_responses.wait_reply(uid) != "OK":     # wait for reply from device
             print("no reply from device")

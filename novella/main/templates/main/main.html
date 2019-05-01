@@ -12,7 +12,7 @@
             <div class="form-group my-2 mx-4 px-4">
                 <button type="button" class="btn btn-info form-control" id="createLamp" data-toggle="modal"
                     data-target="#lampForm" data-bind="click: getDevices">Create
-                    new lamp</button>
+                    new POVLAMP</button>
             </div>
 
             <!-- Modal for creating lamp-->
@@ -59,7 +59,7 @@
                         </div>
                         <div class="modal-footer">
 
-                            <button type="button" class="btn btn-info" data-bind="click: makeLamp">Make lamp</button>
+                            <button type="button" class="btn btn-info" data-bind="click: makeLamp">Make POVLAMP</button>
                         </div>
                     </div>
                 </div>
@@ -70,18 +70,18 @@
     <div class="col-sm p-2 border rounded mx-1">
         <form>
             <div class="form-group mx-4 px-4">
-                <label for="lbody" class="my-auto text-muted"><small>Lamp body</small></label>
+                <label for="lbody" class="my-auto text-muted"><small>Lampbody</small></label>
                 <input type="text" class="form-control" id="lbody" aria-describedby="lampbody"
                     data-bind="value: slampbody" disabled>
             </div>
             <div class="form-group mx-4 px-4">
-                <label for="lshade" class="my-auto text-muted"><small>Lamp shade</small></label>
+                <label for="lshade" class="my-auto text-muted"><small>Lampshade</small></label>
                 <input type="text" class="form-control" id="lshade" aria-describedby="lampshade"
                     data-bind="value: slampshade" disabled>
             </div>
             <div class="mx-4 px-4">
                 <button class="btn btn-danger btn-sm" data-bind="enable: selectedLamp, click: deleteLamp"> Delete
-                    lamp</button>
+                    POVLAMP</button>
             </div>
         </form>
     </div>
@@ -99,24 +99,21 @@
                     <select id="selCommand" class="form-control mx-3"
                         data-bind="options: allCommands, optionsCaption: 'Select command', value:selectedCommand">
                     </select>
-                    <div class="custom-control custom-switch custom-control-inline text-muted" style="font-size: 0.9em">
-                        <input type="checkbox" class="custom-control-input" id="customSwitch1"
-                            data-bind="checked:motorOn">
-                        <label class="custom-control-label" for="customSwitch1">Motor on/off</label>
-                    </div>
+                    
                     <div class="custom-control custom-switch custom-control-inline text-muted" style="font-size: 0.9em">
                         <input type="checkbox" class="custom-control-input" id="customSwitch2"
                             data-bind="checked:brightnessMode">
                         <label class="custom-control-label" for="customSwitch2">Automatic brightness control</label>
                     </div>
+					<span> <button id="rbutton"  class="btn btn-secondary btn-sm" data-bind="click: refresh">Refresh options </button> </span>
                 </form>
             </div>
 
             <div class="container mt-2 " data-bind="visible: ccData">
                 <div class="form-group p-2 pb-3 mb-2 border rounded">
                     <!-- label -->
-                    <div class="d-block border-bottom">
-                        <label class="commandLabel mb-0 " style="color: red" for="formControlRange"
+                    <div class="d-block border-bottom text-center">
+                        <label class="commandLabel  " style="color: black; font-size: 1.2em" for="formControlRange"
                             data-bind="text: ccData().label">Set motor
                             speed</label>
                     </div>
