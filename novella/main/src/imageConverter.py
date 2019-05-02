@@ -55,6 +55,7 @@ class ImageConverter:
         with open(outputFile, 'wb') as myf:
             myf.write( bytearray( noframes.to_bytes(2, byteorder='big') ) )  # Write no of images to file
             myf.write( bytearray( newWidth.to_bytes(2, byteorder='big') ) )  # Write no of columns to file
+            myf.write( bytearray( (0).to_bytes(6, byteorder='big') ) )  # make up 10 bytes in total to remain future proof
             for pixel in data:          # iterate through all the pixels
                 for col in pixel:       # iterate through all the colors 
                     tem = int(col)
