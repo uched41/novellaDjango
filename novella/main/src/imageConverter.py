@@ -12,6 +12,9 @@ class ImageConverter:
         self.fixed_length = 88
 
     def convert_image(self, imagename):
+        if imagename.split('.')[1] == "gif":
+            return self.convert_gif(imagename)
+
         ImageConverter.debug("Converting image {}".format(imagename))
         imgname = os.path.join( my_filemanager.image_dir, imagename)
         self.isImage = False
@@ -68,6 +71,62 @@ class ImageConverter:
         ImageConverter.debug("IMAGE: Bin file generated ..")
         return retbin
 
+
+    def convert_gif(self, imagename):
+        ImageConverter.debug("Converting gif {}".format(imagename))
+        imgname = os.path.join( my_filemanager.image_dir, imagename)
+        self.isImage = False
+        outputFile = " "
+        retbin = ""
+        try:
+            self.im = Image.open(imgname)
+            self.owidth, self.oheight = self.im.size
+            self.info = self.im.info
+            temp = imagename.split('.')[0] + '.bin'
+            retbin = temp
+            outputFile = os.path.join(my_filemanager.bin_dir, temp)
+        except Exception as e:
+            ImageConverter.debug(e)
+            return None
+
+        newWidth = int(self.owidth * self.fixed_length / self.oheight)
+        newSize = newWidth, self.fixed_length
+        # get get data from each frame
+        noframes = 0
+        imgs = []
+
+        try:
+            while 1:
+                img_temp = self.im.resize(newSize, Image.ANTIALIAS)
+                img_temp = img_temp.rotate(90, expand=True)
+                img_temp = img_temp.convert('RGB')
+                img_tdata = list(img_temp.getdata())
+                imgs.append(img_tdata)
+
+                self.im.seek(self.im.tell()+1)
+                noframes = noframes + 1
+        except EOFError:
+            pass
+
+        self.im.seek(0)
+        if noframes == 0:   # set no frames to 1 for normal images
+            noframes = 1
+
+        if os.path.isfile(outputFile):      # delete file if already exists
+            os.remove(outputFile)
+
+        with open(outputFile, 'wb') as myf:
+            myf.write( bytearray( noframes.to_bytes(2, byteorder='big') ) )  # Write no of images to file
+            myf.write( bytearray( newWidth.to_bytes(2, byteorder='big') ) )  # Write no of columns to file
+            myf.write( bytearray( (0).to_bytes(6, byteorder='big') ) )  # make up 10 bytes in total to remain future proof
+            for data in imgs:
+                for pixel in data:          # iterate through all the pixels
+                    for col in pixel:       # iterate through all the colors 
+                        tem = int(col)
+                        myf.write( tem.to_bytes(1, byteorder='big') )
+
+        ImageConverter.debug("GIF: Bin file generated ..")
+        return retbin
 
     @staticmethod
     def debug(*args):
