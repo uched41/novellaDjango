@@ -32,16 +32,7 @@ class ImageConverter:
             return None
 
         # get number of frames if gif
-        noframes = 0
-        try:
-            while 1:
-                self.im.seek(self.im.tell()+1)
-                noframes = noframes + 1
-        except EOFError:
-            pass
-        self.im.seek(0)
-        if noframes == 0:   # set no frames to 1 for normal images
-            noframes = 1
+        noframes = 1
 
         newWidth = int(self.owidth * self.fixed_length / self.oheight)
         newSize = newWidth, self.fixed_length
