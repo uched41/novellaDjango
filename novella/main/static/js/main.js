@@ -121,6 +121,15 @@ function mainPageViewModel() {
             max: 500,
             select: false,
         },
+        Move_image: {
+            label: "Center or move image",
+            input_type: "range",
+            input_class: "form-control", 
+            prepend: true,
+            min: 1,
+            max: 100,
+            select: false,
+        },
     };
     
     // command options to select
@@ -373,6 +382,13 @@ function mainPageViewModel() {
             data.command = "send_command";
             data.device_type = "lampshade";
             temp = { command: "Column_Delay", value: self.arg1Val(), }
+            data.lamp_command = JSON.stringify(temp);
+        }
+
+        else if (cmd == "Move_image"){
+            data.command = "send_command";
+            data.device_type = "lampshade";
+            temp = { command: "Move_Image", value: self.arg1Val(), }
             data.lamp_command = JSON.stringify(temp);
         }
 
