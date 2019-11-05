@@ -7,7 +7,7 @@ services:
   web:
     restart: always
     build: .
-    command: bash -c "service mosquitto start && python3 novella/manage.py runserver 0.0.0.0:8000"
+    command: bash -c "service mosquitto start && python3 novella/manage.py runserver --insecure 0.0.0.0:8000"
     volumes:
       - .:/code
     ports:

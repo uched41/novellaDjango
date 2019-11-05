@@ -109,9 +109,16 @@ class Lamp(models.Model):
 
     brightness = models.PositiveSmallIntegerField(default=50, blank=True)
     brightnessMode = models.PositiveSmallIntegerField(default=0, blank=True)
-    delayBetweenColumns = models.PositiveSmallIntegerField(default=100, blank=True)
+    delayBetweenColumns = models.PositiveSmallIntegerField(default=0, blank=True)
     divider = models.PositiveSmallIntegerField(default=16, blank=True)
     currentImage = models.CharField(max_length=40, blank=True)
+    moveDelay = models.PositiveSmallIntegerField(default=0, blank=True)
+    masterDelay = models.PositiveSmallIntegerField(default=0, blank=True)
+    slaveDelay = models.PositiveSmallIntegerField(default=0, blank=True)
+    Delay0M = models.PositiveSmallIntegerField(default=0, blank=True)
+    Delay180M = models.PositiveSmallIntegerField(default=0, blank=True)
+    Delay0S = models.PositiveSmallIntegerField(default=0, blank=True)
+    Delay180S = models.PositiveSmallIntegerField(default=0, blank=True)
 
     motorSpeed = models.PositiveSmallIntegerField(default=50, blank=True)
     coldLedBrightness = models.PositiveSmallIntegerField(default=50, blank=True)
@@ -139,5 +146,12 @@ class Lamp(models.Model):
             "Delay_Columns" : self.delayBetweenColumns,
             "Divider": self.divider,
             "Image" : self.currentImage,
+            "Move_Delay": self.moveDelay,
+			"Slave_Delay": self.slaveDelay,
+			"Master_Delay": self.masterDelay,
+			"Delay0m": self.Delay0M,
+			"Delay180m": self.Delay180M,
+			"Delay0s": self.Delay0S,
+			"Delay180s": self.Delay180S
             }
         return data

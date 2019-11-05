@@ -86,7 +86,7 @@ def sendCommand(request):
     ldata = ast.literal_eval(lcommand)
     if ldata.get("command") == "Start_Display":
         lamp.currentImage = ldata.get("file")
-    
+     
     elif ldata.get("command") == "Set_Motor_Speed":
         lamp.motorSpeed = ldata.get("value")
 
@@ -107,6 +107,27 @@ def sendCommand(request):
 
     elif ldata.get("command") == "Divider":
         lamp.divider = ldata.get("value")
+
+    elif ldata.get("command") == "Move_Image":
+        lamp.moveDelay = ldata.get("value")
+
+    elif ldata.get("command") == "Master_Delay":
+        lamp.masterDelay = ldata.get("value")
+
+    elif ldata.get("command") == "Slave_Delay":
+        lamp.slaveDelay = ldata.get("value")
+
+    elif ldata.get("command") == "Delay0m":
+        lamp.Delay0M = ldata.get("value")
+
+    elif ldata.get("command") == "Delay180m":
+        lamp.Delay180M = ldata.get("value")
+
+    elif ldata.get("command") == "Delay0s":
+        lamp.Delay0S = ldata.get("value")
+
+    elif ldata.get("command") == "Delay180s":
+        lamp.Delay180S = ldata.get("value")
 
     lamp.save()
 

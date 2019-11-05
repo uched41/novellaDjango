@@ -6,7 +6,9 @@ from main.src.config import my_config
 # This object will run commands sent from device to server
 class DeviceCommand:
     def delete_lamp(self, uid):
+        print("attemting to deletel lamp")
         if Lampshade.objects.filter(uid=uid).exists():
+            print("lampahsde found")
             lshade = Lampshade.objects.get(uid=uid)
             lamp = Lamp.objects.get(lampshade=lshade)
             print("Deleting Lamp {}".format(lshade.name))

@@ -49,7 +49,7 @@ function mainPageViewModel() {
             input_type: "range",
             input_class: "form-control", 
             prepend: true,
-            min: 0,
+            min: 1,
             max: 100,
             select: false,
         },
@@ -58,7 +58,7 @@ function mainPageViewModel() {
             input_type: "range",
             input_class: "form-control", 
             prepend: true,
-            min: 0,
+            min: 1,
             max: 100,
             select: false,
         },
@@ -67,7 +67,7 @@ function mainPageViewModel() {
             input_type: "range",
             input_class: "form-control", 
             prepend: true,
-            min: 0,
+            min: 1,
             max: 100,
             select: false,
         },
@@ -95,39 +95,21 @@ function mainPageViewModel() {
             caption: "Select file",
         },
         Image_brightness: {
-            label: "Global brightness",
+            label: "Image brightness",
             input_type: "range",
             input_class: "form-control", 
             prepend: true,
             min: 1,
             max: 100,
-            select: false,
-        },
-        Divider: {
-            label: "Color divider",
-            input_type: "range",
-            input_class: "form-control", 
-            prepend: true,
-            min: 1,
-            max: 128,
             select: false,
         },
         Column_delay: {
-            label: "Image stretching",
+            label: "Delay between columns, in microseconds",
             input_type: "range",
             input_class: "form-control", 
             prepend: true,
             min: 1,
-            max: 500,
-            select: false,
-        },
-        Move_image: {
-            label: "Center or move image",
-            input_type: "range",
-            input_class: "form-control", 
-            prepend: true,
-            min: 1,
-            max: 100,
+            max: 10000,
             select: false,
         },
     };
@@ -152,6 +134,9 @@ function mainPageViewModel() {
     self.arg2Val = ko.observable(50);
     self.arg2State = ko.observable(true);
     
+
+    self.refresh = function(){
+    }
 
     self.getOnlineLampBodies = function(){
         data = {
@@ -280,32 +265,13 @@ function mainPageViewModel() {
     }
 
 
-	self.refresh = function(){
-		console.log("refreshing options");
-		var cmd = self.selectedCommand();
-
-		if(cmd === undefined) { return ;}
-
-		if(cmd === "Start_display" || cmd === "Delete_bin_file"){
-			self.getFiles();
-			self.arg2State(true);
-		}
-		else if (cmd === "Send_image" || cmd === "Delete_file"){
-			self.getImages();
-			self.arg2State(true);
-		}
-
-	}
-
     self.processCommand = ko.computed(function(){
         var cmd = self.selectedCommand();
         if (cmd === undefined){
             return;
         }
-		
         self.ccData( self.commandsData[cmd]);
         
-
         if(cmd === "Start_display" || cmd === "Delete_bin_File"){
             self.getFiles();    // get files so user can select
             self.arg2State(true);
@@ -385,20 +351,6 @@ function mainPageViewModel() {
             data.lamp_command = JSON.stringify(temp);
         }
 
-        else if (cmd == "Move_image"){
-            data.command = "send_command";
-            data.device_type = "lampshade";
-            temp = { command: "Move_Image", value: self.arg1Val(), }
-            data.lamp_command = JSON.stringify(temp);
-        }
-
-        else if (cmd == "Divider"){
-            data.command = "send_command";
-            data.device_type = "lampshade";
-            temp = { command: "Divider", value: self.arg1Val(), }
-            data.lamp_command = JSON.stringify(temp);
-        }
-
         else if( cmd == "Send_image"){
             data.command = "send_image";
             data.image_name = self.arg2Val();
@@ -410,9 +362,8 @@ function mainPageViewModel() {
         }
 
         console.log(data);
-
         $.post("/command", data).done(function(data){
-            //alert(data.status);
+            alert(data.status);
         })
     }
 
@@ -437,3 +388,4 @@ function mainPageViewModel() {
     );
   });
   
+

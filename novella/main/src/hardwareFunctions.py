@@ -7,7 +7,7 @@ from main.src.filemanager import my_filemanager
 from ast import literal_eval
 import os, math
 
- 
+
 def send_command(uid, command):
     topic = my_config.get("mqtt", "device_topic_base")
     topic = "{}/{}".format(topic, uid)
@@ -28,7 +28,7 @@ def send_image(uid, imgname):
             raise Exception ("file error")
 
         print("starting sending procedure")
-        BUF_SIZE = 512
+        BUF_SIZE = 1024
         topic = "novella/devices/{}/{}/".format(uid, "image")
         print(topic)
         
