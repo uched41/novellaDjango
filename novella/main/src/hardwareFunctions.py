@@ -39,10 +39,11 @@ def send_image(uid, imgname):
         no_lines = os.stat(fpath).st_size / BUF_SIZE
         no_lines = math.ceil(no_lines)
 
-
+        # url is hardcoded, needs to be fixed
+        bin_url = "http://povlamp.local:8000/bin/{}".format(bin_name)
         bin_name = "/" + bin_name   # needed for SPIFFS filesystem
         print("Sending file: {}, to device: {}".format(bin_name, uid))
-        ndata = { "filename": bin_name, "no_lines": no_lines}
+        ndata = { "filename": bin_name, "url": bin_url}
 
         print("Sending start message")
         my_responses.set_false(uid)
@@ -51,22 +52,5 @@ def send_image(uid, imgname):
             print("no reply from device")
             raise Exception("device error")
 
-        atopic = topic + "mid"
-
-        with open(fpath, 'rb') as myfile:
-            content = myfile.read()
-            print("Sending file content")
-            for x in range(0, no_lines):
-                temp = content[ (x*BUF_SIZE) : (x*BUF_SIZE+BUF_SIZE)]
-                my_mqtt.publish(atopic, temp)
-                if my_responses.wait_reply(uid) != "OK":     # wait for reply from device
-                    print("no reply from device")
-                    raise Exception("device error")
-            
-        ltopic = topic + "end"
-        my_mqtt.publish(ltopic, "End")
-        if my_responses.wait_reply(uid) != "OK":     # wait for reply from device
-            print("no reply from device")
-            raise Exception("device error")
         my_responses.set_false(uid)
         print("File send complete")
