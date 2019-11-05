@@ -6,3 +6,4 @@ novella/novella/settings.py
 *.jpg
 *.jpeg
 *.swp
+*.gif
